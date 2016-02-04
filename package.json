@@ -1,7 +1,7 @@
 {
   "name": "radix-sorter",
   "version": "0.1.0",
-  "description": "Sort typed arrays (or get their sorted indices) using the radix sort algorithm. Fast.",
+  "description": "Sort typed arrays (or get their sorted indices) using the radix sort algorithm.",
   "main": "radix-sorter.js",
   "scripts": {
     "test": "mocha -u tdd"
@@ -11,5 +11,9 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5"
+  },
+  "repository": {
+  	"type": "git",
+  	"url": "https://github.com/thomcc/radix-sorter.git"
   }
 }
