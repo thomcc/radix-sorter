@@ -1,6 +1,6 @@
 {
   "name": "radix-sorter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Sort typed arrays (or get their sorted indices) using the radix sort algorithm.",
   "main": "radix-sorter.js",
   "scripts": {
