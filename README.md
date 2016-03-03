@@ -37,8 +37,6 @@ var r = new RadixSorter();
 
 function detectCollisions() {
 	var r = new RadixSorter();
-	var sortedIndices = r.sort(particleXs);
-
 	var sortBounds = new Float32Array(particles.length);
 	for (var i = 0; i < particles.length; ++i) {
 		sortBounds[i] = particles[i].x - particles[i].radius;
