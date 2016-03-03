@@ -216,6 +216,9 @@ var RadixSorter = (function() {
 		if ((input instanceof Uint32Array) || (input instanceof Uint16Array) || (input instanceof Uint8Array)) {
 			return this.sortUint(input);
 		}
+		if ((input instanceof Int32Array) || (input instanceof Int16Array) || (input instanceof Int8Array)) {
+			return this.sortInt(input);
+		}
 		if (input instanceof Float32Array) {
 			return this.sortFloat(input);
 		}
@@ -237,7 +240,35 @@ var RadixSorter = (function() {
 			radixSort(this, input);
 		}
 		return this.results();
-	}
+	};
+
+	RadixSorter.prototype.sortInt = function(input, forceRadix) {
+		if (input == null || input.length === 0) {
+			return;
+		}
+		this.setSize(input.length);
+		if (!forceRadix && input.length < 32) {
+			insertionSort(this, input);
+		}
+		else {
+			var asUint = null;
+			switch (input.BYTES_PER_ELEMENT) {
+				case 1: asUint = new Uint8Array(input.buffer, input.byteOffset, input.length); break;
+				case 2: asUint = new Uint16Array(input.buffer, input.byteOffset, input.length); break;
+				case 4: asUint = new Uint32Array(input.buffer, input.byteOffset, input.length); break;
+				default: throw Error("bad input to RadixSorter#sortInt");
+			}
+			var intMin = (1 << (input.BYTES_PER_ELEMENT*8 - 1)) >>> 0;
+			for (var i = 0; i < asUint.length; ++i) {
+				asUint[i] ^= intMin;
+			}
+			radixSort(this, asUint);
+			for (var i = 0; i < asUint.length; ++i) {
+				asUint[i] ^= intMin;
+			}
+		}
+		return this.results();
+	};
 
 	RadixSorter.prototype.sortFloat = function(input, forceRadix) {
 		if (input == null || input.length === 0) {

@@ -37,103 +37,46 @@ function buildTypedArray(Kind, size, generate) {
 	return new Kind(a);
 }
 
+var testInfo = [
+	{name: 'Uint8Array', type: Uint8Array, rand: function() { return Math.floor(Math.random() * 0xff); }},
+	{name: 'Uint16Array', type: Uint16Array, rand: function() { return Math.floor(Math.random() * 0xffff); }},
+	{name: 'Uint32Array', type: Uint32Array, rand: function() { return Math.floor(Math.random() * 0xffffffff); }},
+
+	{name: 'Int8Array', type: Int8Array, rand: function() { return Math.floor(Math.random() * 0xff) - 0x7f; }},
+	{name: 'Int16Array', type: Int16Array, rand: function() { return Math.floor(Math.random() * 0xffff) - 0x7fff; }},
+	{name: 'Int32Array', type: Int32Array, rand: function() { return Math.floor(Math.random() * 0xffffffff) - 0x7fffffff; }},
+
+	{name: 'Float32Array', type: Float32Array, rand: function() { return (Math.random()-0.5)*1000; }}
+];
 
 suite('RadixSorter', function() {
 	suite('small arrays (insertion sort)', function() {
-		test('Uint8Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Uint8Array, 31, function() { return Math.floor(Math.random()*0xff); })
-			var copy = new Uint8Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Uint16Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Uint16Array, 31, function() { return Math.floor(Math.random()*0xffff); })
-			var copy = new Uint16Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Uint32Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Uint32Array, 31, function() { return Math.floor(Math.random()*0xffffffff); })
-			var copy = new Uint32Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Float32Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Float32Array, 31, function() { return (Math.random()-0.5)*1000; })
-			var copy = new Float32Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
+		testInfo.forEach(function(t) {
+			test(t.name, function() {
+				r = new RadixSorter();
+				var arr = buildTypedArray(t.type, 31, t.rand);
+				var copy = new t.type(arr);
+				var results = r.sort(arr);
+				sortingCheck(arr, results, copy);
+			});
 		});
 	});
 
 
 	suite('big arrays (radix sort)', function() {
-		test('Uint8Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Uint8Array, 2048, function() { return Math.floor(Math.random()*0xff); })
-			var copy = new Uint8Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Uint16Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Uint16Array, 2048, function() { return Math.floor(Math.random()*0xffff); })
-			var copy = new Uint16Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Uint32Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Uint32Array, 2048, function() { return Math.floor(Math.random()*0xffffffff); })
-			var copy = new Uint32Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Float32Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Float32Array, 2048, function() { return (Math.random()-0.5)*1000; })
-			var copy = new Float32Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
+		testInfo.forEach(function(t) {
+			test(t.name, function() {
+				r = new RadixSorter();
+				var arr = buildTypedArray(t.type, 2048, t.rand);
+				var copy = new t.type(arr);
+				var results = r.sort(arr, true);
+				sortingCheck(arr, results, copy);
+			});
 		});
 	});
 
 
 	suite('unsupported types still work', function() {
-		test('Int8Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Int8Array, 128, function() { return Math.floor(Math.random()*0xff); })
-			var copy = new Int8Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Int16Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Int16Array, 128, function() { return Math.floor(Math.random()*0xffff); })
-			var copy = new Int16Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
-		test('Int32Array', function() {
-			var r = new RadixSorter();
-			var arr = buildTypedArray(Int32Array, 128, function() { return Math.floor(Math.random()*0xffffffff); })
-			var copy = new Int32Array(arr);
-			var results = r.sort(arr);
-			sortingCheck(arr, results, copy);
-		});
-
 		test('Float64Array', function() {
 			var r = new RadixSorter();
 			var arr = buildTypedArray(Float64Array, 128, function() { return (Math.random()-0.5)*1000; })
