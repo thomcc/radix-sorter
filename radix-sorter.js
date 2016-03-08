@@ -180,10 +180,19 @@ var RadixSorter = (function() {
 		this._indicesValid = false;
 		if (this._size !== size) {
 			if (size !== 0) {
-				if (!this._indices1 || !this._indices2 ||
-					this._indices1.length !== size || this._indices2.length !== size) {
-					this._indices1 = new Uint32Array(size);
-					this._indices2 = new Uint32Array(size);
+				if (!this._indices1 || !this._indices2 || this._indices1.length !== size || this._indices2.length !== size) {
+					if (this._indices1 && this._indices1.buffer.byteLength >= size*4) {
+						this._indices1 = new Uint32Array(this._indices1.buffer, 0, size);
+					}
+					else {
+						this._indices1 = new Uint32Array(size);
+					}
+					if (this._indices2 && this._indices2.buffer.byteLength >= size*4) {
+						this._indices2 = new Uint32Array(this._indices2.buffer, 0, size);
+					}
+					else {
+						this._indices2 = new Uint32Array(size);
+					}
 				}
 			}
 			this._size = size;

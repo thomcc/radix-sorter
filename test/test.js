@@ -54,9 +54,19 @@ suite('RadixSorter', function() {
 		testInfo.forEach(function(t) {
 			test(t.name, function() {
 				r = new RadixSorter();
-				var arr = buildTypedArray(t.type, 31, t.rand);
+				var arr = buildTypedArray(t.type, 28, t.rand);
 				var copy = new t.type(arr);
 				var results = r.sort(arr);
+				sortingCheck(arr, results, copy);
+
+				arr = buildTypedArray(t.type, 20, t.rand);
+				copy = new t.type(arr);
+				results = r.sort(arr);
+				sortingCheck(arr, results, copy);
+
+				arr = buildTypedArray(t.type, 31, t.rand);
+				copy = new t.type(arr);
+				results = r.sort(arr);
 				sortingCheck(arr, results, copy);
 			});
 		});
@@ -71,6 +81,17 @@ suite('RadixSorter', function() {
 				var copy = new t.type(arr);
 				var results = r.sort(arr, true);
 				sortingCheck(arr, results, copy);
+
+
+				arr = buildTypedArray(t.type, 1000, t.rand);
+				copy = new t.type(arr);
+				results = r.sort(arr);
+				sortingCheck(arr, results, copy);
+
+				arr = buildTypedArray(t.type, 4096, t.rand);
+				copy = new t.type(arr);
+				results = r.sort(arr);
+				sortingCheck(arr, results, copy);
 			});
 		});
 	});
@@ -82,6 +103,16 @@ suite('RadixSorter', function() {
 			var arr = buildTypedArray(Float64Array, 128, function() { return (Math.random()-0.5)*1000; })
 			var copy = new Float64Array(arr);
 			var results = r.sort(arr);
+			sortingCheck(arr, results, copy);
+
+			arr = buildTypedArray(Float64Array, 20, function() { return (Math.random()-0.5)*1000; })
+			copy = new Float64Array(arr);
+			results = r.sort(arr);
+			sortingCheck(arr, results, copy);
+
+			arr = buildTypedArray(Float64Array, 148, function() { return (Math.random()-0.5)*1000; })
+			copy = new Float64Array(arr);
+			results = r.sort(arr);
 			sortingCheck(arr, results, copy);
 		});
 	});
